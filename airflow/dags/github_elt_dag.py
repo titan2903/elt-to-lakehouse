@@ -40,12 +40,12 @@ with DAG(
     # The 'dbt' directory is mounted to /opt/airflow/dbt.
     dbt_run = BashOperator(
         task_id='dbt_run',
-        bash_command='cd /opt/airflow/dbt && dbt run --profiles-dir .',
+        bash_command='cd /opt/airflow/dbt && dbt run --profiles-dir . --log-path /tmp/dbt_logs',
     )
 
     dbt_test = BashOperator(
         task_id='dbt_test',
-        bash_command='cd /opt/airflow/dbt && dbt test --profiles-dir .',
+        bash_command='cd /opt/airflow/dbt && dbt test --profiles-dir . --log-path /tmp/dbt_logs',
     )
 
     [task_ingest_prs, task_ingest_issues] >> dbt_run >> dbt_test
