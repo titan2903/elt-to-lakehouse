@@ -16,6 +16,6 @@ SELECT
     CASE
         WHEN merged_at IS NOT NULL
             THEN
-                EXTRACT(EPOCH FROM (merged_at - created_at)) / 3600.0
+                (EXTRACT(EPOCH FROM (merged_at - created_at)) / 3600.0)::DOUBLE PRECISION
     END AS duration_hours
 FROM staging
