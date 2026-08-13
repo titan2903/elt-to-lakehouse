@@ -3,7 +3,7 @@ from airflow import DAG
 from airflow.operators.python import PythonOperator
 from airflow.operators.bash import BashOperator
 
-from plugins.ingest_github import ingest_pull_requests, ingest_issues
+from ingest_github import ingest_pull_requests, ingest_issues
 
 default_args = {
     'owner': 'data_engineering_team',
@@ -19,7 +19,7 @@ with DAG(
     dag_id='github_elt_pipeline',
     default_args=default_args,
     description='Batch ELT pipeline from GitHub API to Lakehouse (Phase 1)',
-    schedule_interval='@daily',
+    schedule='@daily',
     start_date=datetime(2023, 1, 1),
     catchup=False,
     tags=['elt', 'github', 'phase1'],
