@@ -4,7 +4,7 @@ Rules ini berlaku untuk SEMUA interaksi agent di workspace ini. Baca sebelum men
 
 ## Referensi Wajib
 
-Dokumen desain utama: `rancangan-project-data-engineering.md` di root repository.
+Dokumen desain utama: `DESIGN.md` di root repository.
 Semua keputusan teknis sudah LOCKED di dokumen tersebut. Jangan menyimpang.
 
 ## Fase Workflow
