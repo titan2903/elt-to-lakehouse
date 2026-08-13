@@ -1,0 +1,12 @@
+elt_lakehouse:
+  target: dev
+  outputs:
+    dev:
+      type: postgres
+      host: "{{ env_var('POSTGRES_HOST', 'postgres') }}"
+      user: "{{ env_var('POSTGRES_USER', 'elt_user') }}"
+      password: "{{ env_var('POSTGRES_PASSWORD', 'elt_password') }}"
+      port: 5432
+      dbname: "{{ env_var('POSTGRES_DB', 'elt_lakehouse') }}"
+      schema: public # Default schema, overridden by dbt_project.yml +schema
+      threads: 4

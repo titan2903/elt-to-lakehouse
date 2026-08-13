@@ -1,0 +1,32 @@
+[
+  {
+    "id": 123456789,
+    "number": 1,
+    "state": "closed",
+    "title": "Initial commit",
+    "user": {
+      "id": 9876543,
+      "login": "octocat"
+    },
+    "created_at": "2023-01-01T10:00:00Z",
+    "updated_at": "2023-01-02T12:00:00Z",
+    "closed_at": "2023-01-02T12:00:00Z",
+    "merged_at": "2023-01-02T12:00:00Z",
+    "html_url": "https://github.com/dbt-labs/dbt-core/pull/1"
+  },
+  {
+    "id": 123456790,
+    "number": 2,
+    "state": "open",
+    "title": "Add new feature X",
+    "user": {
+      "id": 12341234,
+      "login": "contributor1"
+    },
+    "created_at": "2023-01-05T08:30:00Z",
+    "updated_at": "2023-01-06T09:15:00Z",
+    "closed_at": null,
+    "merged_at": null,
+    "html_url": "https://github.com/dbt-labs/dbt-core/pull/2"
+  }
+]

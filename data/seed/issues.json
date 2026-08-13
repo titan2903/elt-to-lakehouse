@@ -1,0 +1,46 @@
+[
+  {
+    "id": 987654321,
+    "number": 3,
+    "state": "closed",
+    "title": "Bug: parsing error on timestamp",
+    "user": {
+      "id": 11223344,
+      "login": "bugfinder"
+    },
+    "labels": [
+      {
+        "id": 101,
+        "name": "bug"
+      },
+      {
+        "id": 102,
+        "name": "triage"
+      }
+    ],
+    "created_at": "2023-02-01T14:20:00Z",
+    "updated_at": "2023-02-03T16:00:00Z",
+    "closed_at": "2023-02-03T16:00:00Z",
+    "html_url": "https://github.com/dbt-labs/dbt-core/issues/3"
+  },
+  {
+    "id": 987654322,
+    "number": 4,
+    "state": "open",
+    "title": "Feature request: better logging",
+    "user": {
+      "id": 55667788,
+      "login": "featureasker"
+    },
+    "labels": [
+      {
+        "id": 103,
+        "name": "enhancement"
+      }
+    ],
+    "created_at": "2023-02-10T11:00:00Z",
+    "updated_at": "2023-02-10T11:00:00Z",
+    "closed_at": null,
+    "html_url": "https://github.com/dbt-labs/dbt-core/issues/4"
+  }
+]
