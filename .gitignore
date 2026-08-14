@@ -1,0 +1,25 @@
+# Secrets
+.env
+dlt/.dlt/secrets.toml
+
+# DuckDB
+*.duckdb
+*.duckdb.wal
+
+# Python
+__pycache__/
+*.pyc
+.pytest_cache/
+*.egg-info/
+
+# dbt
+dbt/target/
+dbt/dbt_packages/
+dbt/logs/
+
+# IDE
+.vscode/
+.idea/
+
+# Virtual env
+.venv/

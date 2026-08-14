@@ -1,0 +1,38 @@
+version: 2
+
+models:
+  - name: stg_pull_requests
+    description: "Staging model for pull requests."
+    columns:
+      - name: pr_id
+        description: "Primary key"
+        tests:
+          - unique
+          - not_null
+      - name: pr_number
+      - name: title
+      - name: state
+      - name: user_id
+
+  - name: stg_issues
+    description: "Staging model for issues."
+    columns:
+      - name: issue_id
+        description: "Primary key"
+        tests:
+          - unique
+          - not_null
+      - name: issue_number
+      - name: title
+      - name: state
+      - name: user_id
+
+  - name: stg_users
+    description: "Staging model for users extracted from PRs and Issues."
+    columns:
+      - name: user_id
+        description: "Primary key"
+        tests:
+          - unique
+          - not_null
+      - name: user_login
