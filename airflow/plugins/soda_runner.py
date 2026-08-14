@@ -43,7 +43,7 @@ def run_soda_duckdb(check_file: str, data_source: str = "duckdb"):
     # For issues, handle the case where it might be empty
     try:
         con.execute("CREATE VIEW issues AS SELECT * FROM read_parquet('s3://lakehouse/raw/github_data/issues/*.parquet');")
-    except Exception as e:
+    except Exception:
         # If no issues data exists yet, create empty view with same schema or just let it fail later
         pass
     
