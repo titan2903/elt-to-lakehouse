@@ -12,7 +12,9 @@ dbt-duckdb==1.9.0
 dlt[filesystem,parquet]==1.30.0
 
 # Lakehouse Compute (Fase 2)
-duckdb==1.0.0
+# Using duckdb 1.5.5 because earlier versions have bugs downloading extensions
+duckdb==1.5.5
+dlt[duckdb,s3]==1.30.0
 
 # Testing & Linting
 pytest==8.3.3
@@ -20,5 +22,6 @@ ruff==0.6.8
 sqlfluff==3.2.0
 
 # Data Quality (Fase 3)
-soda-core-duckdb==3.5.6
+# Note: soda-core-duckdb==3.5.6 is omitted here because it conflicts with duckdb>=1.1.0 
+# and we only need it inside Docker (which installs it via docker-compose.yml).
 soda-core-postgres==3.5.6
