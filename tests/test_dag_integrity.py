@@ -13,5 +13,5 @@ def test_dag_loaded():
 def test_task_count():
     dagbag = DagBag(dag_folder="airflow/dags", include_examples=False)
     dag = dagbag.get_dag(dag_id="github_elt_pipeline")
-    # ingest_dlt_to_minio, dbt_run, dbt_test
-    assert len(dag.tasks) == 3
+    # ingest_dlt_to_minio, soda_check_raw, dbt_run, dbt_test, soda_check_mart
+    assert len(dag.tasks) == 5
