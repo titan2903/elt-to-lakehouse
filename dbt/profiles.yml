@@ -8,6 +8,7 @@ elt_lakehouse:
         - httpfs
         - aws
         - postgres
+        - ducklake
       settings:
         s3_endpoint: minio:9000
         s3_access_key_id: "{{ env_var('MINIO_ACCESS_KEY', 'minioadmin') }}"
@@ -15,7 +16,10 @@ elt_lakehouse:
         s3_use_ssl: false
         s3_region: us-east-1
         s3_url_style: path
+      plugins:
+        - module: ducklake_plugin
       attach:
+        # PostgreSQL serving layer for Metabase
         - alias: pg
           type: postgres
           path: "dbname={{ env_var('POSTGRES_DB', 'elt_lakehouse') }} user={{ env_var('POSTGRES_USER', 'elt_user') }} password={{ env_var('POSTGRES_PASSWORD', 'elt_password') }} host={{ env_var('POSTGRES_HOST', 'postgres') }} port={{ env_var('POSTGRES_PORT', '5432') }}"

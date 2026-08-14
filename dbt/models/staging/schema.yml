@@ -3,14 +3,20 @@ version: 2
 sources:
   - name: github_data
     schema: main
+    freshness:
+      warn_after: {count: 24, period: hour}
+      error_after: {count: 48, period: hour}
     tables:
       - name: pull_requests
+        loaded_at_field: updated_at
         meta:
           external_location: "s3://lakehouse/raw/github_data/pull_requests/*.parquet"
       - name: issues
+        loaded_at_field: updated_at
         meta:
           external_location: "s3://lakehouse/raw/github_data/issues/*.parquet"
       - name: issues__labels
+        freshness: null
         meta:
           external_location: "s3://lakehouse/raw/github_data/issues__labels/*.parquet"
 models:
