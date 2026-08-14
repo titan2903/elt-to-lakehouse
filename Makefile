@@ -16,14 +16,14 @@ setup:
 	@echo "Setup complete. Please verify .env settings."
 
 up:
-	docker compose -f docker-compose.yml up -d
+	docker compose -f docker-compose.yml -f docker-compose.fase2.yml up -d
 	@echo "Waiting for services to be healthy..."
 	@sleep 10
 	@echo "Airflow UI: http://localhost:8080 (admin/admin)"
 	@echo "Metabase UI: http://localhost:3000"
 
 down:
-	docker compose down -v
+	docker compose -f docker-compose.yml -f docker-compose.fase2.yml down -v
 	@echo "Containers stopped and volumes removed."
 
 test: test-dag test-dbt

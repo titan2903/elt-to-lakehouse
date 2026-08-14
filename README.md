@@ -35,13 +35,17 @@ make seed
 Setiap fase memiliki dokumentasi mendetail terkait alasan arsitektural, *trade-off*, keputusan teknis, dan evaluasi hasil:
 
 - [Fase 1: Batch ELT Baseline](docs/architecture-v1.md)
-- [Fase 2: Lakehouse Migration](docs/architecture-v2.md) *(Akan datang)*
+- [Fase 2: Lakehouse Migration](docs/architecture-v2.md)
 - [Fase 3: Data Quality, Monitoring & Alerting](docs/architecture-v3.md) *(Akan datang)*
 - [Catatan Evaluasi Diri](docs/self-evaluation/)
 
 ## Arsitektur Baseline (Fase 1)
 
 Fase 1 menggunakan pendekatan konvensional dengan ekstraksi via *Python scripts* (REST API pagination), dimuat mentah (raw JSON) ke dalam PostgreSQL, lalu ditransformasikan menggunakan `dbt-postgres` ke dalam skema *star schema* (fakta & dimensi) sebelum divisualisasikan oleh Metabase. Pendekatan ini sengaja dibuat manual tanpa *tools* ingestion seperti `dlt` untuk mendemonstrasikan fondasi dasar ELT sebelum diabstraksi di fase-fase berikutnya.
+
+## Arsitektur Lakehouse (Fase 2)
+
+Fase 2 memigrasikan penyimpanan *raw data* dari database operasional ke *Object Storage* (MinIO) dalam format Parquet, membentuk arsitektur Lakehouse yang *scalable*. *Compute layer* dipisahkan dari *storage layer* menggunakan DuckDB secara *in-memory* yang membaca Parquet langsung dari MinIO. dbt-duckdb melakukan transformasi dan hasilnya dimaterialisasikan kembali ke PostgreSQL sebagai *serving layer* melalui koneksi ATTACH, mengoptimalkan proses tanpa membebani database utama.
 
 ## Tech Stack Utama
 - **Orchestration**: Apache Airflow

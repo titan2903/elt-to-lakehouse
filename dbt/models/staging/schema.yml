@@ -1,5 +1,18 @@
 version: 2
 
+sources:
+  - name: github_data
+    schema: main
+    tables:
+      - name: pull_requests
+        meta:
+          external_location: "s3://lakehouse/raw/github_data/pull_requests/*.parquet"
+      - name: issues
+        meta:
+          external_location: "s3://lakehouse/raw/github_data/issues/*.parquet"
+      - name: issues__labels
+        meta:
+          external_location: "s3://lakehouse/raw/github_data/issues__labels/*.parquet"
 models:
   - name: stg_pull_requests
     description: "Staging model for pull requests."

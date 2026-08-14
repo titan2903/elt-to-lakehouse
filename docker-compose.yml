@@ -11,18 +11,25 @@ x-airflow-common:
     AIRFLOW__CORE__DAGS_ARE_PAUSED_AT_CREATION: 'true'
     AIRFLOW__WEBSERVER__SECRET_KEY: 'super_secret_key_for_airflow_webserver_123!'
     AIRFLOW__WEBSERVER__SESSION_BACKEND: 'securecookie'
-    _PIP_ADDITIONAL_REQUIREMENTS: 'dbt-postgres==1.9.0 dbt-core==1.9.1'
+    _PIP_ADDITIONAL_REQUIREMENTS: 'dbt-postgres==1.9.0 dbt-duckdb==1.9.0 dbt-core==1.9.1 dlt[duckdb,s3]==1.30.0 duckdb'
     # Environment variables for our pipeline
     GITHUB_API_TOKEN: ${GITHUB_API_TOKEN}
     DEMO_MODE: ${DEMO_MODE:-false}
     POSTGRES_USER: ${POSTGRES_USER:-elt_user}
     POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-elt_password}
     POSTGRES_DB: ${POSTGRES_DB:-elt_lakehouse}
+    MINIO_ACCESS_KEY: ${MINIO_ACCESS_KEY:-minioadmin}
+    MINIO_SECRET_KEY: ${MINIO_SECRET_KEY:-minioadmin}
+    AWS_ACCESS_KEY_ID: ${MINIO_ACCESS_KEY:-minioadmin}
+    AWS_SECRET_ACCESS_KEY: ${MINIO_SECRET_KEY:-minioadmin}
+    AWS_ENDPOINT_URL: http://minio:9000
+    AWS_REGION: us-east-1
     POSTGRES_HOST: postgres
     POSTGRES_PORT: '5432'
   volumes:
     - ./airflow/dags:/opt/airflow/dags
     - ./airflow/plugins:/opt/airflow/plugins
+    - ./data:/opt/airflow/data
     - ./data/seed:/opt/airflow/data/seed
     - ./dbt:/opt/airflow/dbt
   depends_on:

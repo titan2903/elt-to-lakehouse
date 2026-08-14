@@ -1,17 +1,17 @@
 WITH pr_users AS (
     SELECT
-        (raw_data -> 'user' ->> 'id')::BIGINT AS user_id,
-        raw_data -> 'user' ->> 'login' AS user_login
-    FROM raw.pull_requests
-    WHERE raw_data -> 'user' IS NOT NULL
+        user__id AS user_id,
+        user__login AS user_login
+    FROM {{ source('github_data', 'pull_requests') }}
+    WHERE user__id IS NOT NULL
 ),
 
 issue_users AS (
     SELECT
-        (raw_data -> 'user' ->> 'id')::BIGINT AS user_id,
-        raw_data -> 'user' ->> 'login' AS user_login
-    FROM raw.issues
-    WHERE raw_data -> 'user' IS NOT NULL
+        user__id AS user_id,
+        user__login AS user_login
+    FROM {{ source('github_data', 'issues') }}
+    WHERE user__id IS NOT NULL
 )
 
 SELECT DISTINCT
