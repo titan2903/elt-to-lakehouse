@@ -6,6 +6,13 @@ requests==2.32.3
 # dbt
 dbt-core==1.9.1
 dbt-postgres==1.9.0
+dbt-duckdb==1.9.0
+
+# Ingestion (Fase 2)
+dlt[filesystem,parquet]==1.30.0
+
+# Lakehouse Compute (Fase 2)
+duckdb==1.5.5
 
 # Testing & Linting
 pytest==8.3.3

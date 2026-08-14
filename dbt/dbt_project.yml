@@ -19,8 +19,10 @@ clean-targets:
 models:
   elt_lakehouse:
     staging:
+      +database: lakehouse
       +schema: staging
-      +materialized: view
+      +materialized: table
     marts:
+      +database: pg
       +schema: mart
       +materialized: table

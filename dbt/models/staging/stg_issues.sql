@@ -1,5 +1,5 @@
 WITH raw_issues AS (
-    SELECT * FROM raw.issues
+    SELECT * FROM {{ source('github_data', 'issues') }}
 )
 
 SELECT
@@ -7,10 +7,9 @@ SELECT
     number AS issue_number,
     title,
     state,
-    created_at,
-    updated_at,
-    (raw_data ->> 'closed_at')::TIMESTAMP AS closed_at,
-    (raw_data -> 'user' ->> 'id')::BIGINT AS user_id,
-    raw_data -> 'user' ->> 'login' AS user_login,
-    raw_data -> 'labels' AS labels_json
+    created_at::TIMESTAMP AS created_at,
+    updated_at::TIMESTAMP AS updated_at,
+    closed_at::TIMESTAMP AS closed_at,
+    user__id AS user_id,
+    user__login AS user_login
 FROM raw_issues

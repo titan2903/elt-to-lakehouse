@@ -20,11 +20,11 @@ def test_fetch_github_data_pagination(mock_get):
     
     mock_get.side_effect = [mock_response_1, mock_response_2]
     
-    data = fetch_github_data("pulls", repo="test/repo")
+    data = list(fetch_github_data("pulls", repo="test/repo"))
     
     assert len(data) == 2
-    assert data[0]["id"] == 1
-    assert data[1]["id"] == 2
+    assert data[0][0]["id"] == 1
+    assert data[1][0]["id"] == 2
     assert mock_get.call_count == 2
 
 @patch("plugins.ingest_github.time.sleep")
@@ -43,7 +43,7 @@ def test_fetch_github_data_backoff(mock_get, mock_sleep):
     
     mock_get.side_effect = [mock_rate_limit, mock_success]
     
-    data = fetch_github_data("pulls", repo="test/repo")
+    data = list(fetch_github_data("pulls", repo="test/repo"))
     
     assert len(data) == 1
     assert mock_get.call_count == 2
