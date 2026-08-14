@@ -14,7 +14,6 @@ class Plugin(BasePlugin):
         pg_conn = f"dbname={pg_db} user={pg_user} password={pg_pass} host={pg_host} port={pg_port}"
         
         # Load extensions (should already be loaded, but safe to ensure)
-        conn.execute("LOAD ducklake")
         conn.execute("LOAD postgres")
         conn.execute("LOAD httpfs")
         conn.execute("LOAD aws")
@@ -29,6 +28,6 @@ class Plugin(BasePlugin):
         conn.execute("SET s3_region='us-east-1'")
         conn.execute("SET s3_url_style='path'")
 
-        # Attach DuckLake
-        attach_sql = f"ATTACH 'ducklake:postgres:{pg_conn}' AS lakehouse (DATA_PATH 's3://lakehouse/ducklake/', METADATA_SCHEMA 'ducklake_catalog')"
+        # Attach DuckLake catalog (Postgres schema)
+        attach_sql = f"ATTACH '{pg_conn}' AS lakehouse (TYPE POSTGRES)"
         conn.execute(attach_sql)

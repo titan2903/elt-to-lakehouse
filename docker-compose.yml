@@ -10,7 +10,7 @@ x-airflow-common:
     AIRFLOW__CORE__DAGS_ARE_PAUSED_AT_CREATION: 'true'
     AIRFLOW__WEBSERVER__SECRET_KEY: 'super_secret_key_for_airflow_webserver_123!'
     AIRFLOW__WEBSERVER__SESSION_BACKEND: 'securecookie'
-    _PIP_ADDITIONAL_REQUIREMENTS: 'dbt-postgres==1.9.0 dbt-duckdb==1.9.0 dbt-core==1.9.1 dlt[duckdb,s3]==1.30.0 duckdb'
+    _PIP_ADDITIONAL_REQUIREMENTS: 'dbt-postgres==1.9.0 dbt-duckdb==1.9.0 dbt-core==1.9.1 dlt[duckdb,s3]==1.30.0 duckdb soda-core-duckdb==3.5.6 soda-core-postgres==3.5.6'
     # Environment variables for our pipeline
     GITHUB_API_TOKEN: ${GITHUB_API_TOKEN}
     DEMO_MODE: ${DEMO_MODE:-false}
@@ -31,6 +31,7 @@ x-airflow-common:
     - ./data:/opt/airflow/data
     - ./data/seed:/opt/airflow/data/seed
     - ./dbt:/opt/airflow/dbt
+    - ./data_quality:/opt/airflow/data_quality
   depends_on:
     postgres:
       condition: service_healthy

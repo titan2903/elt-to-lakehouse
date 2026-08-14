@@ -1,0 +1,21 @@
+checks for fct_pull_requests:
+  # Referential integrity: semua user_id di fct_pull_requests valid di dim_users
+  - values in (user_id) must exist in dim_users (user_id)
+  
+  # Value range: duration_hours tidak negatif, created_at tidak di masa depan
+  - min(duration_hours) >= 0
+  - failed rows:
+      fail condition: created_at > CURRENT_TIMESTAMP
+  
+  # Completeness: persentase null di kolom title, state, user_id di bawah 1%
+  - missing_percent(title) < 1%
+  - missing_percent(state) < 1%
+  - missing_percent(user_id) < 1%
+
+checks for fct_issues:
+  - values in (user_id) must exist in dim_users (user_id)
+  - failed rows:
+      fail condition: created_at > CURRENT_TIMESTAMP
+  - missing_percent(title) < 1%
+  - missing_percent(state) < 1%
+  - missing_percent(user_id) < 1%

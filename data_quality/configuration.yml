@@ -1,0 +1,13 @@
+data_source postgres_mart:
+  type: postgres
+  host: ${POSTGRES_HOST}
+  port: ${POSTGRES_PORT}
+  username: ${POSTGRES_USER}
+  password: ${POSTGRES_PASSWORD}
+  database: ${POSTGRES_DB}
+  schema: mart
+
+data_source duckdb_raw:
+  type: duckdb
+  path: /tmp/soda.duckdb
+  # How to load extensions in soda duckdb? It doesn't natively support loading ducklake.
