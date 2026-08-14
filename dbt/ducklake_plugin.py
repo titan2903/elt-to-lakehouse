@@ -1,5 +1,6 @@
-from dbt.adapters.duckdb.plugins import BasePlugin
 import os
+
+from dbt.adapters.duckdb.plugins import BasePlugin
 
 class Plugin(BasePlugin):
     def configure_connection(self, conn):

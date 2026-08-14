@@ -31,12 +31,12 @@ with DAG(
 
     dbt_run = BashOperator(
         task_id='dbt_run',
-        bash_command='cd /opt/airflow/dbt && dbt run --profiles-dir . --log-path /tmp/dbt_logs',
+        bash_command='cd /opt/airflow/dbt && dbt run --profiles-dir . --log-path /tmp/dbt_logs --target-path /tmp/dbt_target',
     )
 
     dbt_test = BashOperator(
         task_id='dbt_test',
-        bash_command='cd /opt/airflow/dbt && dbt test --profiles-dir . --log-path /tmp/dbt_logs',
+        bash_command='cd /opt/airflow/dbt && dbt test --profiles-dir . --log-path /tmp/dbt_logs --target-path /tmp/dbt_target',
     )
 
     task_ingest_data >> dbt_run >> dbt_test
