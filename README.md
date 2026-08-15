@@ -24,7 +24,10 @@ cd elt-to-lakehouse
 # 2. Siapkan environment variables (gunakan template bawaan)
 cp .env.example .env
 
-# 3. Setup, jalankan container, dan load sample data
+# 3. Update core dependencies (fix pip resolver issues)
+source .venv/bin/activate && pip install --upgrade requests urllib3 charset-normalizer
+
+# 4. Setup, jalankan container, dan load sample data
 make setup
 make up
 make seed
