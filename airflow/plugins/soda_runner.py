@@ -11,8 +11,6 @@ def run_soda_duckdb(check_file: str, data_source: str = "duckdb"):
     con = duckdb.connect(database=":memory:")
     con.execute("INSTALL httpfs;")
     con.execute("LOAD httpfs;")
-    con.execute("INSTALL aws;")
-    con.execute("LOAD aws;")
     con.execute("INSTALL postgres;")
     con.execute("LOAD postgres;")
     
@@ -22,13 +20,15 @@ def run_soda_duckdb(check_file: str, data_source: str = "duckdb"):
     s3_key = os.getenv('MINIO_ACCESS_KEY')
     s3_secret = os.getenv('MINIO_SECRET_KEY')
     
+    s3_endpoint = os.getenv('MINIO_ENDPOINT', 'minio:9000')
+
     con.execute(f"""
         CREATE SECRET (
             TYPE S3,
             KEY_ID '{s3_key}',
             SECRET '{s3_secret}',
             REGION 'us-east-1',
-            ENDPOINT 'minio:9000',
+            ENDPOINT '{s3_endpoint}',
             URL_STYLE 'path',
             USE_SSL false
         );

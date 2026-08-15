@@ -28,17 +28,17 @@ down:
 	@echo "Containers stopped and volumes removed."
 
 test: test-dag test-dbt
-	AIRFLOW__CORE__LOAD_EXAMPLES=false airflow db migrate && PYTHONPATH=$(PWD)/airflow pytest tests/
+	AIRFLOW__CORE__LOAD_EXAMPLES=false $(PWD)/.venv/bin/airflow db migrate && PYTHONPATH=$(PWD)/airflow $(PWD)/.venv/bin/pytest tests/
 
 test-dag:
-	AIRFLOW__CORE__LOAD_EXAMPLES=false airflow db migrate && PYTHONPATH=$(PWD)/airflow pytest tests/test_dag_integrity.py
+	AIRFLOW__CORE__LOAD_EXAMPLES=false $(PWD)/.venv/bin/airflow db migrate && PYTHONPATH=$(PWD)/airflow $(PWD)/.venv/bin/pytest tests/test_dag_integrity.py
 
 test-dbt:
-	cd dbt && PYTHONPATH=$(PWD)/dbt POSTGRES_HOST=localhost MINIO_ENDPOINT=localhost:9000 dbt test --profiles-dir .
+	cd dbt && PYTHONPATH=$(PWD)/dbt POSTGRES_HOST=localhost MINIO_ENDPOINT=localhost:9000 $(PWD)/.venv/bin/dbt test --profiles-dir .
 
 seed:
 	@echo "Triggering seed data initialization (handled via DAG / DEMO_MODE)"
 
 lint:
-	ruff check .
-	sqlfluff lint dbt/models
+	$(PWD)/.venv/bin/ruff check .
+	$(PWD)/.venv/bin/sqlfluff lint dbt/models
