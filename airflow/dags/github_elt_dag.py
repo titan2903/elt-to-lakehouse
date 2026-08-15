@@ -3,7 +3,7 @@ from airflow import DAG
 from airflow.operators.python import PythonOperator
 from airflow.operators.bash import BashOperator
 
-from callbacks import on_failure_callback, on_data_quality_failure_callback
+from callbacks import on_failure_callback, on_data_quality_failure_callback, on_success_callback
 from soda_runner import run_soda_duckdb, run_soda_postgres
 from ingest_github import run_dlt_pipeline
 
@@ -25,6 +25,7 @@ with DAG(
     start_date=datetime(2023, 1, 1),
     catchup=False,
     tags=['elt', 'lakehouse', 'phase3', 'data-quality'],
+    on_success_callback=on_success_callback,
 ) as dag:
 
     task_ingest_data = PythonOperator(

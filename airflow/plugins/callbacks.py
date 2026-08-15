@@ -8,15 +8,15 @@ def send_alert_to_n8n(context, alert_type="pipeline_failure", custom_message=Non
     webhook_url = os.getenv("N8N_WEBHOOK_URL", "http://n8n:5678/webhook/pipeline-alert")
     
     exception = context.get("exception")
-    error_message = custom_message if custom_message else str(exception) if exception else "Unknown error"
+    error_message = custom_message if custom_message else str(exception) if exception else ("Pipeline finished successfully!" if alert_type == "pipeline_success" else "Unknown error")
     
     payload = {
         "alert_type": alert_type,
-        "dag_id": context["task_instance"].dag_id,
-        "task_id": context["task_instance"].task_id,
+        "dag_id": context["dag"].dag_id if "dag" in context else "unknown_dag",
+        "task_id": context["task_instance"].task_id if "task_instance" in context else "pipeline_complete",
         "execution_date": str(context["execution_date"]),
         "error_message": error_message,
-        "severity": "critical" if alert_type == "pipeline_failure" else "warning"
+        "severity": "info" if alert_type == "pipeline_success" else ("critical" if alert_type == "pipeline_failure" else "warning")
     }
     
     try:
@@ -38,3 +38,7 @@ def on_data_quality_failure_callback(context):
 def on_schema_drift_callback(context, drift_info: str):
     """Callback for schema drift detection from dlt."""
     send_alert_to_n8n(context, alert_type="schema_drift", custom_message=drift_info)
+
+def on_success_callback(context):
+    """Callback for successful completion of the entire DAG."""
+    send_alert_to_n8n(context, alert_type="pipeline_success")
