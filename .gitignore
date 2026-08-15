@@ -25,3 +25,6 @@ dbt/logs/
 
 # Virtual env
 .venv/
+
+# Personal Documents
+docs/portofolio/
