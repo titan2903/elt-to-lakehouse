@@ -3,18 +3,19 @@ apache-airflow==2.10.5
 psycopg2-binary==2.9.9
 requests==2.32.3
 
+
 # dbt
 dbt-core==1.9.1
 dbt-postgres==1.9.0
 dbt-duckdb==1.9.0
 
 # Ingestion (Fase 2)
-dlt[filesystem,parquet]==1.30.0
+# combined extras to fix pip conflict
+dlt[duckdb,s3,filesystem,parquet]==1.30.0
 
 # Lakehouse Compute (Fase 2)
 # Using duckdb 1.5.5 because earlier versions have bugs downloading extensions
 duckdb==1.5.5
-dlt[duckdb,s3]==1.30.0
 
 # Testing & Linting
 pytest==8.3.3
