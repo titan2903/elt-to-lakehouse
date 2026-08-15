@@ -84,8 +84,32 @@ def run_dlt_pipeline():
         dataset_name="github_data"
     )
     
+    # Record schema version before load to detect schema drift
+    initial_version = pipeline.default_schema.version if pipeline.default_schema else 0
+    
     load_info = pipeline.run([get_pull_requests(), get_issues()], loader_file_format="parquet")
     logger.info(load_info)
+    
+    # Detect Schema Drift
+    final_version = pipeline.default_schema.version
+    if final_version > initial_version:
+        drift_msg = f"Schema evolved from version {initial_version} to {final_version}. New columns/tables were added."
+        logger.warning(f"SCHEMA DRIFT DETECTED: {drift_msg}")
+        
+        webhook_url = os.getenv("N8N_WEBHOOK_URL", "http://n8n:5678/webhook/pipeline-alert")
+        payload = {
+            "alert_type": "schema_drift",
+            "dag_id": "github_elt_pipeline",
+            "task_id": "ingest_dlt_to_minio",
+            "execution_date": time.strftime("%Y-%m-%dT%H:%M:%S"),
+            "error_message": drift_msg,
+            "severity": "warning"
+        }
+        try:
+            requests.post(webhook_url, json=payload, timeout=10)
+            logger.info("Schema drift alert sent to n8n.")
+        except Exception as e:
+            logger.error(f"Failed to send schema drift alert: {e}")
 
 def ingest_pull_requests(**kwargs):
     # Dummy to not break DAG if we migrate step by step

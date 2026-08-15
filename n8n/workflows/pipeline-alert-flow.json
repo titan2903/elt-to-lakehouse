@@ -1,0 +1,141 @@
+{
+  "name": "Pipeline Alert Flow",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "pipeline-alert",
+        "responseMode": "lastNode",
+        "options": {}
+      },
+      "id": "1",
+      "name": "Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [250, 300],
+      "webhookId": "pipeline-alert"
+    },
+    {
+      "parameters": {
+        "dataType": "string",
+        "value1": "={{ $json.body.alert_type }}",
+        "rules": {
+          "rules": [
+            {
+              "value2": "pipeline_failure",
+              "output": 0
+            },
+            {
+              "value2": "data_quality_failure",
+              "output": 1
+            },
+            {
+              "value2": "schema_drift",
+              "output": 2
+            }
+          ]
+        },
+        "fallbackOutput": 3
+      },
+      "id": "2",
+      "name": "Switch",
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 1,
+      "position": [450, 300]
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $env.TELEGRAM_CHAT_ID }}",
+        "text": "=🔴 *Pipeline Failure*\nDAG: `{{ $json.body.dag_id }}`\nTask: `{{ $json.body.task_id }}`\nTime: {{ $json.body.execution_date }}\nError: {{ $json.body.error_message }}",
+        "parseMode": "MarkdownV2"
+      },
+      "id": "3",
+      "name": "Telegram - Pipeline Failure",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1,
+      "position": [700, 100],
+      "credentials": {
+        "telegramApi": {
+          "id": "telegram-bot-api",
+          "name": "Telegram Bot API"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $env.TELEGRAM_CHAT_ID }}",
+        "text": "=🟡 *Data Quality Failure*\nDAG: `{{ $json.body.dag_id }}`\nTask: `{{ $json.body.task_id }}`\nTime: {{ $json.body.execution_date }}\nError: {{ $json.body.error_message }}",
+        "parseMode": "MarkdownV2"
+      },
+      "id": "4",
+      "name": "Telegram - DQ Failure",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1,
+      "position": [700, 300],
+      "credentials": {
+        "telegramApi": {
+          "id": "telegram-bot-api",
+          "name": "Telegram Bot API"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $env.TELEGRAM_CHAT_ID }}",
+        "text": "=🟠 *Schema Drift Detected*\nDAG: `{{ $json.body.dag_id }}`\nTask: `{{ $json.body.task_id }}`\nTime: {{ $json.body.execution_date }}\nInfo: {{ $json.body.error_message }}",
+        "parseMode": "MarkdownV2"
+      },
+      "id": "5",
+      "name": "Telegram - Schema Drift",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1,
+      "position": [700, 500],
+      "credentials": {
+        "telegramApi": {
+          "id": "telegram-bot-api",
+          "name": "Telegram Bot API"
+        }
+      }
+    }
+  ],
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Switch",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Switch": {
+      "main": [
+        [
+          {
+            "node": "Telegram - Pipeline Failure",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Telegram - DQ Failure",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Telegram - Schema Drift",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {}
+}

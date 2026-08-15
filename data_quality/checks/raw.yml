@@ -1,0 +1,21 @@
+checks for pull_requests:
+  # Volume check: pastikan ada data (karena tidak pakai soda-scientific untuk anomaly detection)
+  - row_count > 0
+  # Schema checks for pull_requests:
+  - row_count > 0
+  - schema:
+      name: Schema Check
+      warn:
+        when required column missing:
+          - pr_id
+          - user_id
+          - state
+          - title
+          - updated_at
+        when wrong column type:
+          id: bigint
+          state: varchar
+          title: varchar
+
+checks for issues:
+  - row_count >= 0

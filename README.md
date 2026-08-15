@@ -1,16 +1,16 @@
 # Data Engineering Portofolio: ELT to Lakehouse
 
-Proyek ini mendemonstrasikan progresi arsitektur data dari pipeline ELT batch konvensional menjadi arsitektur Lakehouse modern. Dibangun secara bertahap (Fase 1 → Fase 2 → Fase 3) untuk menunjukkan kemampuan mendesain, memigrasi arsitektur, dan menerapkan *best practices* data engineering, bukan sekadar mengeksekusi tutorial tunggal.
+Proyek ini mendemonstrasikan progresi arsitektur data dari pipeline ELT konvensional menjadi arsitektur Lakehouse modern. Proyek ini dibangun untuk menunjukkan kemampuan mendesain sistem, melakukan migrasi arsitektur yang *scalable*, dan menerapkan *best practices* data engineering secara utuh (End-to-End).
 
 ## Arsitektur Tingkat Tinggi (Evolusi)
 
-Proyek ini direncanakan dan dieksekusi dalam tiga fase utama:
+Proyek ini merupakan kesatuan sistem yang berevolusi melalui tiga pendekatan utama:
 
-1. **Fase 1 (Baseline)**: Batch ELT menggunakan Python custom script (ingestion), Airflow (orchestration), PostgreSQL (storage), dbt-postgres (transformation), dan Metabase (visualization).
-2. **Fase 2 (Lakehouse Migration)**: Migrasi ingestion ke dlt, storage ke MinIO (Parquet), dan compute layer ke DuckLake + DuckDB (`dbt-duckdb`), dengan PostgreSQL bertindak sebagai *serving layer* (mart schema).
-3. **Fase 3 (Data Quality & Alerting)**: Penambahan Soda Core untuk *data quality checks* terotomatisasi di Airflow DAGs, dan integrasi alerting via webhook n8n ke Telegram.
+1. **Baseline ELT**: Batch ELT menggunakan Python custom script (ingestion), Airflow (orchestration), PostgreSQL (storage), dbt-postgres (transformation), dan Metabase (visualization).
+2. **Lakehouse Migration**: Migrasi lapisan ingestion menggunakan dlt, penyimpanan *raw data* ke MinIO (Parquet), dan pemrosesan analitik menggunakan DuckLake + DuckDB (`dbt-duckdb`), dengan PostgreSQL bertindak sebagai *serving layer* (mart schema).
+3. **Data Quality & Alerting**: Observabilitas penuh dengan menambahkan Soda Core untuk *data quality checks* otomatis di dalam DAG Airflow, serta integrasi *alerting* *real-time* via webhook n8n ke Telegram.
 
-*(Detail diagram arsitektur dan dokumentasi teknis untuk setiap fase dapat dilihat di folder `docs/` setelah fase tersebut diimplementasikan)*
+*(Detail diagram arsitektur dan dokumentasi teknis untuk setiap tahapan evolusi dapat dilihat di folder `docs/`)*
 
 ## Quick Start (DEMO_MODE)
 
@@ -24,7 +24,10 @@ cd elt-to-lakehouse
 # 2. Siapkan environment variables (gunakan template bawaan)
 cp .env.example .env
 
-# 3. Setup, jalankan container, dan load sample data
+# 3. Update core dependencies (fix pip resolver issues)
+source .venv/bin/activate && pip install --upgrade requests urllib3 charset-normalizer
+
+# 4. Setup, jalankan container, dan load sample data
 make setup
 make up
 make seed
@@ -32,20 +35,27 @@ make seed
 
 ## Dokumentasi Pembahasan & Desain
 
-Setiap fase memiliki dokumentasi mendetail terkait alasan arsitektural, *trade-off*, keputusan teknis, dan evaluasi hasil:
+Repositori ini menyertakan dokumentasi mendetail terkait alasan arsitektural, *trade-off*, keputusan teknis, dan evaluasi hasil:
 
-- [Fase 1: Batch ELT Baseline](docs/architecture-v1.md)
-- [Fase 2: Lakehouse Migration](docs/architecture-v2.md)
-- [Fase 3: Data Quality, Monitoring & Alerting](docs/architecture-v3.md) *(Akan datang)*
+- [Arsitektur Baseline ELT](docs/architecture-v1.md)
+- [Arsitektur Migrasi Lakehouse](docs/architecture-v2.md)
+- [Arsitektur Data Quality, Monitoring & Alerting](docs/architecture-v3.md)
 - [Catatan Evaluasi Diri](docs/self-evaluation/)
 
-## Arsitektur Baseline (Fase 1)
+## Detail Komponen Arsitektur
 
-Fase 1 menggunakan pendekatan konvensional dengan ekstraksi via *Python scripts* (REST API pagination), dimuat mentah (raw JSON) ke dalam PostgreSQL, lalu ditransformasikan menggunakan `dbt-postgres` ke dalam skema *star schema* (fakta & dimensi) sebelum divisualisasikan oleh Metabase. Pendekatan ini sengaja dibuat manual tanpa *tools* ingestion seperti `dlt` untuk mendemonstrasikan fondasi dasar ELT sebelum diabstraksi di fase-fase berikutnya.
+### 1. Pendekatan Baseline ELT
+Menggunakan pendekatan konvensional dengan ekstraksi via *Python scripts* (REST API pagination), dimuat mentah (raw JSON) ke dalam PostgreSQL, lalu ditransformasikan menggunakan `dbt-postgres` ke dalam skema *star schema* (fakta & dimensi) sebelum divisualisasikan oleh Metabase. Pendekatan ini mendemonstrasikan pemahaman kuat atas fondasi dasar ELT sebelum diabstraksi ke *tools* modern.
 
-## Arsitektur Lakehouse (Fase 2)
+### 2. Implementasi Arsitektur Lakehouse
+Penyimpanan *raw data* dari database operasional dipindahkan ke *Object Storage* (MinIO) dalam format Parquet, membentuk arsitektur Lakehouse yang *scalable*. *Compute layer* dipisahkan dari *storage layer* menggunakan DuckDB secara *in-memory* yang membaca Parquet langsung dari MinIO. dbt-duckdb melakukan transformasi dan hasilnya dimaterialisasikan kembali ke PostgreSQL sebagai *serving layer* melalui koneksi ATTACH, mengoptimalkan proses tanpa membebani database utama.
 
-Fase 2 memigrasikan penyimpanan *raw data* dari database operasional ke *Object Storage* (MinIO) dalam format Parquet, membentuk arsitektur Lakehouse yang *scalable*. *Compute layer* dipisahkan dari *storage layer* menggunakan DuckDB secara *in-memory* yang membaca Parquet langsung dari MinIO. dbt-duckdb melakukan transformasi dan hasilnya dimaterialisasikan kembali ke PostgreSQL sebagai *serving layer* melalui koneksi ATTACH, mengoptimalkan proses tanpa membebani database utama.
+### 3. Implementasi Data Quality & Alerting
+Observabilitas pipeline dijamin dengan menambahkan pemeriksaan kualitas data (*data quality checks*) menggunakan Soda Core, dan *alerting* otomatis ke Telegram menggunakan n8n.
+- **Data Quality Strategy**: Pemeriksaan dibagi menjadi pengecekan *raw layer* (freshness & validasi dasar sebelum transformasi dbt) dan *mart layer* (integritas data setelah transformasi dbt) demi mencegah perambatan data kotor ke dashboard.
+- **Alerting Boundary (Separation of Concerns)**: Airflow hanya bertanggung bertanggung jawab menyadari kegagalan (deteksi) lalu mengirim HTTP POST webhook, sedangkan n8n memegang logika merutekan (routing) dan memformat (*formatting*) pesan untuk dikirim ke Telegram.
+
+*Disclaimer: Penggunaan `n8n` dalam repositori ini tunduk pada "Sustainable Use License". Ia disertakan secara khusus semata-mata sebagai dependensi runtime (orchestrator notifikasi mandiri).*
 
 ## Tech Stack Utama
 - **Orchestration**: Apache Airflow

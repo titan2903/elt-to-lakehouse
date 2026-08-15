@@ -5,6 +5,8 @@ dlt/.dlt/secrets.toml
 # DuckDB
 *.duckdb
 *.duckdb.wal
+*.duckdb_extension
+*.duckdb_extension.gz
 
 # Python
 __pycache__/
