@@ -20,4 +20,4 @@ elt_lakehouse:
         # PostgreSQL serving layer for Metabase
         - alias: pg
           type: postgres
-          path: "dbname={{ env_var('POSTGRES_DB', 'elt_lakehouse') }} user={{ env_var('POSTGRES_USER', 'elt_user') }} password={{ env_var('POSTGRES_PASSWORD', 'elt_password') }} host={{ env_var('POSTGRES_HOST', 'postgres') }} port={{ env_var('POSTGRES_PORT', '5432') }}"
+          path: "dbname={{ env_var('POSTGRES_DB', 'elt_lakehouse') }} user={{ env_var('POSTGRES_USER', 'elt_user') }} password={{ env_var('POSTGRES_PASSWORD', 'elt_password') }} host={{ env_var('POSTGRES_HOST', 'postgres') }} port={{ env_var('POSTGRES_PORT', '5434') }}"

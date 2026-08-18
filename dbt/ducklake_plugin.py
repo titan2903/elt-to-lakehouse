@@ -9,7 +9,7 @@ class Plugin(BasePlugin):
         pg_user = os.getenv('POSTGRES_USER', 'elt_user')
         pg_pass = os.getenv('POSTGRES_PASSWORD', 'elt_password')
         pg_host = os.getenv('POSTGRES_HOST', 'postgres')
-        pg_port = os.getenv('POSTGRES_PORT', '5432')
+        pg_port = os.getenv('POSTGRES_PORT', '5434')
         
         pg_conn = f"dbname={pg_db} user={pg_user} password={pg_pass} host={pg_host} port={pg_port}"
         

@@ -25,7 +25,7 @@ Metabase → PostgreSQL (schema: mart)
 
 Config di Metabase:
 - Host: `postgres` (service name di docker-compose)
-- Port: `5432`
+- Port: `5434`
 - Database: sesuai `POSTGRES_DB` di `.env`
 - Schema filter: `mart` saja — jangan expose schema lain (`raw`, `staging`, `airflow_meta`)
 

@@ -34,7 +34,7 @@ test-dag:
 	AIRFLOW__CORE__LOAD_EXAMPLES=false $(PWD)/.venv/bin/airflow db migrate && PYTHONPATH=$(PWD)/airflow $(PWD)/.venv/bin/pytest tests/test_dag_integrity.py
 
 test-dbt:
-	cd dbt && PYTHONPATH=$(PWD)/dbt POSTGRES_HOST=localhost MINIO_ENDPOINT=localhost:9000 $(PWD)/.venv/bin/dbt test --profiles-dir .
+	cd dbt && PYTHONPATH=$(PWD)/dbt POSTGRES_HOST=localhost POSTGRES_PORT=5434 MINIO_ENDPOINT=localhost:9000 $(PWD)/.venv/bin/dbt test --profiles-dir .
 
 seed:
 	@echo "Triggering seed data initialization (handled via DAG / DEMO_MODE)"

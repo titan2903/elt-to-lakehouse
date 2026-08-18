@@ -15,7 +15,8 @@ def run_soda_duckdb(check_file: str, data_source: str = "duckdb"):
     con.execute("LOAD postgres;")
     
     # Attach PostgreSQL catalog
-    pg_conn = f"dbname={os.getenv('POSTGRES_DB')} user={os.getenv('POSTGRES_USER')} password={os.getenv('POSTGRES_PASSWORD')} host={os.getenv('POSTGRES_HOST')} port=5432"
+    pg_port = os.getenv('POSTGRES_PORT', '5432')
+    pg_conn = f"dbname={os.getenv('POSTGRES_DB')} user={os.getenv('POSTGRES_USER')} password={os.getenv('POSTGRES_PASSWORD')} host={os.getenv('POSTGRES_HOST')} port={pg_port}"
     
     s3_key = os.getenv('MINIO_ACCESS_KEY')
     s3_secret = os.getenv('MINIO_SECRET_KEY')
